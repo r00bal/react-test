@@ -4,9 +4,11 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+const el = document.getElementById('root');
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App hello={el.getAttribute('hello')}/>
   </React.StrictMode>,
   document.getElementById('root')
 );

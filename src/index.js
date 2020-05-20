@@ -8,7 +8,7 @@ const el = document.getElementById('root');
 
 ReactDOM.render(
   <React.StrictMode>
-    <App hello={el.getAttribute('hello')}/>
+    <App sheetdbId={el.getAttribute('sheetdbId')} />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -22,31 +22,30 @@ const getPrices = (items, value = 'prices') => {
   });
 }
 
-function App({ hello }) {
+function App({ sheetdbId }) {
   const [menu, setMenu] = useState();
   const [restaurant, setRestaurant] = useState();
 
   useEffect(() => {
     async function fetchData() {
-      const resultMenu = await axios(
-        'https://sheetdb.io/api/v1/3x3bl9v7indtm?sheet=menu&fbclid=IwAR18nVF2gXhgk9B6hHVpoBruWiIuWotUt4BQeEs4jazF8sPaW2qBkYCvfno',
+      const resultMenu = await axios(`https://sheetdb.io/api/v1/${sheetdbId}?sheet=menu`,
       );
       const { data } = resultMenu;
 
       setMenu(groupBy((data), 'maincategory'));
     }
     fetchData()
-  }, []);
+  }, [sheetdbId]);
 
   useEffect(() => {
     async function fetchData() {
       const resultRestaurant = await axios(
-        'https://sheetdb.io/api/v1/3x3bl9v7indtm?sheet=location&fbclid=IwAR18nVF2gXhgk9B6hHVpoBruWiIuWotUt4BQeEs4jazF8sPaW2qBkYCvfno',
+        `https://sheetdb.io/api/v1/${sheetdbId}?sheet=location`,
       );
       setRestaurant(resultRestaurant.data[0]);
     }
     fetchData()
-  }, []);
+  }, [sheetdbId]);
 
   return (
 
@@ -78,7 +77,36 @@ function App({ hello }) {
           </div>
         )
       })}
+
+      {
+        restaurant && (
+          <footer>
+            <h2>Hours and Phone</h2>
+            <ul>
+              <li>{restaurant.address}</li>
+              <li>Phone - <a href={`tel:${restaurant.phone}`}>{restaurant.phone}</a></li>
+              <li>{restaurant.hours1}</li>
+              <li>Curbside Pick Available - {restaurant.hours2}</li>
+              <li><a href={`${restaurant.website}`} className="broken_link">Website</a></li>
+              <li><a href={`${restaurant.facebook}`} className="broken_link">Facebook</a></li>
+              <li><a href={`${restaurant.instagram}`} className="broken_link">Instagram</a></li>
+            </ul>
+          </footer>
+        )}
+
     </div>
+
+
+    // <div v-for="(category, mainCategory) in menu">
+    //   <h2>{{ mainCategory }}</h2>
+    //   <div v-for="(items,category) in groupBy(category)">
+    //     <p class="pricerange">{{ items.length }} {{ category }} Items - ${{ minPrice(items) }} to ${{ maxPrice(items) }}</p>
+    //     <ul style="padding-bottom:0;">
+    //       <li v-for="item in items"><b>{{ item.title }}</b> - {{ item.description }} - PRICE {{ item.prices }}</li>
+    //     </ul>
+    //   </div>
+    // </div>
+  );
 }
 
 export default App;
